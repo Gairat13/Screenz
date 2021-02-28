@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <div class="container">
+    <div style="display: inline-block; " >
+      <img src="{{ movie.image.url }}" width="300px" height="250px">
+    </div>
+    <div style="display: inline-block;">
+      <h5>Название:  {{ movie.title }}</h5>
+      <h5>Описание:  {{ movie.description }}</h5>
+      <h5>Слоган:  {{ movie.tagline }}</h5>
+      <h5>Жанр:  {{ movie.genre }}</h5>
+      <h5>Страна:  {{ movie.gross_in_the_world }}</h5>
+      <h5>Премьера:  {{ movie.world_premiere }}</h5>
+      <h5>Бюджет:  {{ movie.budget }}</h5>
+      <h5>Кассовые сборы в USA:  {{ movie.gross_in_usa }}</h5>
+      <h5>Кассовые сборы в мире:  {{ movie.gross_in_the_world }}</h5>
+    </div>
+    <div>
+      <video width="640px" height="380px" controls>
+        <source src="{{ movie.video.url }}" type='video/webm; codecs="vp8, vorbis"'>
+      </video>
+    </div>
+  </div>
+
+</body>
+</html>
