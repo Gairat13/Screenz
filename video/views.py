@@ -8,29 +8,31 @@ from .models import *
 
 class GenreListView(ListView):
     model = Genre
-    template_name = 'index.html'
+    template_name = 'video/index.html'
     context_object_name = 'genres'
 
 
 class GenreDetailView(DetailView):
     model = Genre
-    template_name = 'genre-details.html'
+    template_name = 'video/genre-details.html'
     context_object_name = 'genre'
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
+        print(kwargs)
         self.slug = kwargs.get('slug', None)
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['movies'] = Movie.objects.filter(genre_id=self.slug)
+        genre = self.get_object()
+        context['movies'] = Movie.objects.filter(genre__in=[genre])
         return context
 
 
 class MovieDetailView(DetailView):
     model = Movie
-    template_name = 'movie-detail.html'
+    template_name = 'video/movie-detail.html'
     context_object_name = 'movie'
 
     def get(self, request, *args, **kwargs):
@@ -40,5 +42,7 @@ class MovieDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['actors'] = Actor.objects.filter(movie_id=self.pk)
+        context['comments'] = Review.objects.filter(movie_id=self.pk)
         return context
+
+

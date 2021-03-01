@@ -1,16 +1,16 @@
 from datetime import date
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models
 
+User = get_user_model()
 
 # Create your models here.
 from pytils.translit import slugify
 
 CHOICES = (
-    ('actor', 'Актер'),
-    ('director', 'Режисер'),
-    ('producer', 'Продюсер'),
+    ('actor', 'actor'),
+    ('director', 'director'),
 )
 
 
@@ -33,7 +33,7 @@ class Movie(models.Model):
     tagline = models.CharField(max_length=200, blank=True, null=True)
     video = models.FileField(upload_to='video')
     description = models.TextField()
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, related_name='movies')
+    genre = models.ManyToManyField(Genre)
     description = models.TextField()
     image = models.ImageField(upload_to='movies', blank=True, null=True)
     world_premiere = models.DateField(default=date.today)
@@ -58,11 +58,10 @@ class Actor(models.Model):
 
 
 class Review(models.Model):
-    email = models.EmailField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField(max_length=2000)
     parent = models.ForeignKey('self', related_name="children", on_delete=models.SET_NULL, blank=True, null=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='comments')
 
     def __str__(self):
-        return f'{self.user} - {self.movie}'
+        return f'{self.user} :\n {self.text}'
