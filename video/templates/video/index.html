@@ -1,14 +1,50 @@
-{% extends 'includes/base.html' %}
-{% block title %}Shop{% endblock title %}
-{% block body %}
-    <div class="container">
-      {% for genre in genres %}
-      <a href="{% url 'genre-detail' genre.slug %}">
-          <div class="div" style="display:inline-block;">
-          <p class="text-center mt-2 mb-2">{{ genre.title }}</p>
-          <img src="{{ genre.image.url }}" height="300px" width="300px" alt="">
-          </div>
-      </a>
-      {% endfor %}
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+
+   <div id="video-container">
+        <div class="video-overlay"></div>
+        <div class="video-content">
+            <div class="inner" style="background-image: url({% static 'img/videoplay.mp4' %});">
+              <h1>Welcome to <em>Screenz</em></h1>
+              <p>Your movie theater at home</p>
+              <p>Homepage with full-width image gallery</p>
+                <div class="scroll-icon">
+                    <a class="scrollTo" data-scrollTo="portfolio" href="#"><img src="{% static 'img/scroll-icon.png' %}" alt=""></a>
+                </div>
+            </div>
+        </div>
+        <video autoplay="" loop="" muted>
+        	<source src="{% static 'img/videoplay.mp4' %}" type="video/mp4" />
+        </video>
     </div>
-{% endblock body %}
+
+    </div>
+  <div class="full-screen-portfolio" id="portfolio">
+
+        <div class="container-fluid">
+      {% for genre in genres %}
+            <a href="{% url 'genre-detail' genre.slug %}">
+            <div class="col-md-4 col-sm-6">
+                <div class="portfolio-item">
+                    <a href="{{ genre.image.url }}" data-lightbox="image-1">
+                        <div class="thumb">
+                            <div class="hover-effect">
+                                <div class="hover-content">
+                                    <h1>{{ genre }}</h1>
+                                    <p>Awesome Subtittle Goes Here</p>
+                                </div>
+                            </div>
+                        <div class="image" style="width: auto; height: 300px">
+                            <img src="{{ genre.image.url }}" width="100%" height="300px">
+                        </div>
+                    </div></a>
+                </div>
+            </div>
+            </a>
+            {% endfor %}
+        </div>
+      {% endblock %}
+
+
