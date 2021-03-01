@@ -1,6 +1,6 @@
-.idea
+.idea/
 .env
-venv
-media
+media/
 *.pyc
 __pycache__/
+/venv/
