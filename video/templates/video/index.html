@@ -1,0 +1,14 @@
+{% extends 'includes/base.html' %}
+{% block title %}Shop{% endblock title %}
+{% block body %}
+    <div class="container">
+      {% for genre in genres %}
+      <a href="{% url 'genre-detail' genre.slug %}">
+          <div class="div" style="display:inline-block;">
+          <p class="text-center mt-2 mb-2">{{ genre.title }}</p>
+          <img src="{{ genre.image.url }}" height="300px" width="300px" alt="">
+          </div>
+      </a>
+      {% endfor %}
+    </div>
+{% endblock body %}

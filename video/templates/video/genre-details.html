@@ -1,0 +1,14 @@
+{% extends 'includes/base.html' %}
+{% block title %}Shop{% endblock title %}
+{% block body %}
+    <div class="container">
+    {% for x in movies %}
+    <a href="{% url 'movie-detail' x.id %}">
+        {% if x.image %}
+    <img src="{{ x.image.url }}" alt="">
+        {% endif %}
+    <h6>{{ x.title }}</h6>
+    </a>
+    {% endfor %}
+</div>
+{% endblock body %}

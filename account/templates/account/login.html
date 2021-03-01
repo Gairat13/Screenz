@@ -1,0 +1,10 @@
+{% extends 'auth_base.html' %}
+{% block title %}Вход на сайт{% endblock title%}
+{% block body %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Войти</button>
+    </form>
+{% endblock %}
+
