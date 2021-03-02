@@ -1,0 +1,12 @@
+{% extends 'includes/base.html' %}
+{% block title %}Delete{% endblock title %}
+{% block body %}
+        {% if request.user.is_superuser or request.user.is_staff %}
+        <h1>Do you want delete this movie?</h1>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Yes</button>
+            <button><a href="{% url 'movie-detail' object.id %}" role="button">Cancel</a></button>
+        </form>
+        {% endif %}
+{% endblock body %}

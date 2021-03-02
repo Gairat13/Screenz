@@ -2,6 +2,7 @@ from datetime import date
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.urls import reverse_lazy
 
 User = get_user_model()
 
@@ -30,12 +31,12 @@ class Genre(models.Model):
 
 class Movie(models.Model):
     title = models.CharField(max_length=100)
-    tagline = models.CharField(max_length=200, blank=True, null=True)
+    tagline = models.CharField(max_length=200)
     video = models.FileField(upload_to='video')
     description = models.TextField()
     genre = models.ManyToManyField(Genre)
     description = models.TextField()
-    image = models.ImageField(upload_to='movies', blank=True, null=True)
+    image = models.ImageField(upload_to='movies')
     world_premiere = models.DateField(default=date.today)
     budget = models.PositiveBigIntegerField(default=0, help_text="specify the amount in dollars")
     gross_in_usa = models.PositiveBigIntegerField(default=0, help_text="specify the amount in dollars")
@@ -44,6 +45,9 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse_lazy('movie-detail', kwargs={'pk': self.pk})
 
 
 class Actor(models.Model):
@@ -60,7 +64,6 @@ class Actor(models.Model):
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField(max_length=2000)
-    parent = models.ForeignKey('self', related_name="children", on_delete=models.SET_NULL, blank=True, null=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='comments')
 
     def __str__(self):

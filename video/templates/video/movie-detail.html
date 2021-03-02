@@ -16,13 +16,36 @@
       <h5>Кассовые сборы в USA:  {{ movie.gross_in_usa }}</h5>
       <h5>Кассовые сборы в мире:  {{ movie.gross_in_the_world }}</h5>
     </div>
+
     <div>
+        {% if request.user.is_superuser or request.user.is_staff %}
+          <a href="{% url 'edit-movie' movie.id %}">Изменить</a>
+          <a href="{% url 'delete-movie' movie.id %}">Удалить</a>
+        {% endif %}
       <video width="640px" height="380px" controls>
         <source src="{{ movie.video.url }}" type='video/webm; codecs="vp8, vorbis"'>
       </video>
     </div>
-    {% for comment in comments %}
-    <h5>{{ comment }} </h5>
-    {% endfor %}
+        <br>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+          <div class="col-md-6">
+            <input hidden name="user" type="text" value="{{ request.user.pk }}">
+          </div>
+          <div class="col-md-6">
+            <input hidden name="movie" type="text" value="{{ movie.id }}">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">{{ form.text.label_tag }}</label>
+            <input name="text" type="text" class="form-control" >
+          </div>
+            <button class="btn btn-primary" type="submit">comment</button>
+        </form>
+
+        <div>
+            {% for comment in comments %}
+            <h5>{{ comment }} </h5>
+            {% endfor %}
+        </div>
   </div>
 {% endblock body %}
