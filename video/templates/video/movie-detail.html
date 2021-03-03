@@ -21,6 +21,8 @@ https://templatemo.com/tm-520-highway
         <link rel="stylesheet" href="{% static 'css/fontAwesome.css' %}">
         <link rel="stylesheet" href="{% static 'css/light-box.css' %}">
         <link rel="stylesheet" href="{% static 'css/templatemo-style.css' %}">
+        <link rel="stylesheet" href="{% static 'css/css-for-video/style.css' %}">
+
 
         <link href="https://fonts.googleapis.com/css?family=Kanit:100,200,300,400,500,600,700,800,900" rel="stylesheet">
 
@@ -31,7 +33,7 @@ https://templatemo.com/tm-520-highway
 
     <nav>
         <div class="logo">
-            <a href="index.html">Gala<em>xy</em></a>
+            <a href="{% url 'index' %}">ScreenzZ</a>
         </div>
       <div class="menu-icon">
         <span></span>
@@ -47,35 +49,36 @@ https://templatemo.com/tm-520-highway
     </div>
     <div class="blog-entries">
         <div class="container">
-            <a href="{% url 'favorite' movie.id%}">favorite</a>
-            <div style="display: inline-block; " >
-                <img src="{{ movie.image.url }}" width="350px" height="480px">
-            </div>
-            <div style="display: inline-block;">
-            <h5>Title:  {{ movie.title }}</h5>
-            <h5>Storyline:  {{ movie.description }}</h5>
-            <h5>tagline:  {{ movie.tagline }}</h5>
-            <h5>Genre:  {{ movie.genre }}</h5>
-            <h5>Country:  {{ movie.gross_in_the_world }}</h5>
-            <h5>Date of premier:  {{ movie.world_premiere }}</h5>
-            <h5>Budget:  {{ movie.budget }}</h5>
-            <h5>Gross in the USA:  {{ movie.gross_in_usa }}</h5>
-            <h5>Gross in the World :  {{ movie.gross_in_the_world }}</h5>
-            </div>
-            <div class="col-md-9">
+                <div style="display: flex;">
+                    <div style="display: inline-block; " >
+                        <img src="{{ movie.image.url }}" width="350px" height="480px">
+                    </div>
+                    <div style="margin-left: 10%; margin-top: 5%;">
+                        <h5>Title:  {{ movie.title }}</h5>
+                        <h5>Storyline:  {{ movie.description }}</h5>
+                        <h5>tagline:  {{ movie.tagline }}</h5>
+                        <h5>Genre:  {{ movie.genre }}</h5>
+                        <h5>Country:  {{ movie.gross_in_the_world }}</h5>
+                        <h5>Date of premier:  {{ movie.world_premiere }}</h5>
+                        <h5>Budget:  {{ movie.budget }}</h5>
+                        <h5>Gross in the USA:  {{ movie.gross_in_usa }}</h5>
+                        <h5>Gross in the World :  {{ movie.gross_in_the_world }}</h5>
+                    </div>
+                </div>
+            <div class="col-md-12">
                 <div class="blog-posts">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="single-blog-post">
-                                <div>
-                                {% if request.user.is_superuser or request.user.is_staff %}
-                                  <a href="{% url 'edit-movie' movie.id %}"><button type="button" class="btn btn-dark">Update</button></a>
+                                <div style="margin-top: 5%;">
+                                    {% if request.user.is_superuser or request.user.is_staff %}
+                                      <a href="{% url 'edit-movie' movie.id %}"><button style="margin-left: 8%"; type="button" class="btn btn-dark">Update</button></a>
 
-                                  <a href="{% url 'delete-movie' movie.id %}"><button type="button" class="btn btn-secondary">Delete</button></a>
-                                {% endif %}
-                                    <video width="640px" height="380px" controls>
-                                    <source src="{{ movie.video.url }}"  type='video/webm; codecs="vp8, vorbis"'>
-                                    </video>
+                                      <a href="{% url 'delete-movie' movie.id %}"><button style="margin-left: 5%"; type="button" class="btn btn-secondary">Delete</button></a>
+                                    {% endif %}
+                                        <video class="detail-page-video"  controls>
+                                        <source src="{{ movie.video.url }}"  type='video/webm; codecs="vp8, vorbis"'>
+                                        </video>
                                 </div>
                                 <div class="text-content">
                                      <h5>Title:  {{ movie.title }}</h5>
@@ -91,9 +94,10 @@ https://templatemo.com/tm-520-highway
           <div class="col-md-6">
             <input hidden name="movie" type="text" value="{{ movie.id }}">
           </div>
-          <div class="col-md-6">
-            <label class="form-label">{{ form.text.label_tag }}</label>
-            <input name="text" type="text" class="form-control" ><button class="btn btn-dark" type="submit">comment</button>
+          <div class="col-md-6" style="display: flex;">
+            <label class="form-label"></label>
+            <input name="text" type="text" class="form-control" >
+              <button class="btn btn-dark" type="submit" style="margin-left: 5%;">comment</button>
           </div>
           </div>
           </div>
@@ -104,12 +108,12 @@ https://templatemo.com/tm-520-highway
             <h5>{{ comment }} </h5>
             {% endfor %}
         </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
 
     <footer>
@@ -122,32 +126,43 @@ https://templatemo.com/tm-520-highway
         </div>
     </footer>
 
-
-    <section class="overlay-menu">
+            <section class="overlay-menu">
       <div class="container">
         <div class="row">
           <div class="main-menu">
+              <div class="container">
+                <div>
+                    {% if user.is_authenticated %}
+                        {{ user.email }} <a href="{% url 'logout' %}"><button type="button" class="btn btn-dark">Exit</button></a>
+                    {% else %}
+                    <a href="{% url 'login' %}"><button type="button" class="btn btn-dark">log in</button></a> or
+                    <a href="{% url 'registration' %}"><button type="button" class="btn btn-dark"> Sign up</button></a>
+                    {% endif %}
+                </div>
+            {% block body %}{% endblock body %}
+                  <br>
+                </div>
+               <div class="search-box">
+                <input type="text" class="search-txt" placeholder="Search...">
+                <a href="#" class="search-btn"></a>
+                </div>
               <ul>
                   <li>
-                      <a href="base.html">Home</a>
+                      <a href="{% url 'index' %}">Home</a>
                   </li>
                   <li>
-                      <a href="login.html">login</a>
+                      <a href="{% url 'create-genre' %}">Create genre</a>
                   </li>
                   <li>
-                      <a href="registration.html">registration</a>
+                      <a href="{% url 'create-movie' %}">Create movie</a>
                   </li>
                   <li>
-                      <a href="genre-details.html">Genres</a>
+                      <a href="{% url 'login' %}">Log In</a>
                   </li>
                   <li>
-                      <a href="blog.html">Blog Entries</a>
-                  </li>
-                  <li>
-                      <a href="single-post.html">Single Post</a>
+                      <a href="{% url 'registration' %}">Sign Up</a>
                   </li>
               </ul>
-              <p>We create awesome templates for you</p>
           </div>
         </div>
       </div>

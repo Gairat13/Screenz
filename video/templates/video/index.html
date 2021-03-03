@@ -7,9 +7,6 @@
             <div class="inner" style="background-image: url({% static 'img/videoplay.mp4' %});">
               <h1>Welcome to <em>ScreenzZ</em></h1>
               <p>Your movie theater at home</p>
-                <div class="scroll-icon">
-                    <a class="scrollTo" data-scrollTo="portfolio" href="#"><img src="{% static 'img/scroll-icon.png' %}" alt=""></a>
-                </div>
             </div>
         </div>
         <video autoplay="" loop="" muted>
@@ -30,10 +27,10 @@
                             <div class="hover-effect">
                                 <div class="hover-content">
                                     <h1>{{ genre }}</h1>
-                                    <p>Awesome Subtittle Goes Here</p>
+                                    <p>movie selection</p>
                                 </div>
                             </div>
-                        <div class="image" style="width: 530px; height: 300px">
+                        <div class="image" style="width: autopx; height: 300px">
                             <img src="{{ genre.image.url }}" width="100%" height="300px">
                         </div>
                     </div>

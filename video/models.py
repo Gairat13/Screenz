@@ -15,6 +15,14 @@ CHOICES = (
 )
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField()
+    slug = models.CharField(max_length=50,unique=True)
+
+    def __str__(self):
+        return self.name
+
 class Genre(models.Model):
     title = models.CharField(max_length=50, unique=True)
     slug = models.CharField(primary_key=True, max_length=50)

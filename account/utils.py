@@ -6,7 +6,7 @@ def send_activation_mail(user):
     message = f"""Thank you for registration. Please tap the link to activate your account:
     http://127.0.0.1:8000/accounts/activation/?u={user.activation_code}"""
     send_mail(
-        'Активация аккаунта',
+        'Аccount activation',
         message,
         'test@my_project.com',
         [user.email],

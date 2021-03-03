@@ -1,43 +1,7 @@
-
 <!DOCTYPE html>
+{% extends "includes/base.html" %}
 {% load static %}
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>About Highway - Free CSS Template</title>
-<!--
-
-Highway Template
-
-https://templatemo.com/tm-520-highway
-
--->
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
-
-        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
-        <link rel="stylesheet" href="{% static 'css/fontAwesome.css' %}">
-        <link rel="stylesheet" href="{% static 'css/light-box.css' %}">
-        <link rel="stylesheet" href="{% static 'css/templatemo-style.css' %}">
-
-        <link href="https://fonts.googleapis.com/css?family=Kanit:100,200,300,400,500,600,700,800,900" rel="stylesheet">
-
-        <script src="{% static 'js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' %}"></script>
-    </head>
-
-<body>
-
-    <nav>
-        <div class="logo">
-            <a href="index.html">Screen<em>zZ</em></a>
-        </div>
-      <div class="menu-icon">
-        <span></span>
-      </div>
-    </nav>
+{% block content %}
 
     <div class="page-heading">
         <div class="container">
@@ -50,31 +14,23 @@ https://templatemo.com/tm-520-highway
 
     <div class="services">
         <div class="container">
+            <div class="row">
+                {% for x in movies %}
             <div class="col-md-4 col-sm-6">
-                {% for x in page_obj %}
+
                  <a href="{% url 'movie-detail' x.pk %}">
                             {% if x.image %}
                                 <img src="{{ x.image.url }}" style="height:500px; width: 350px;" class="card-img-top" alt="...">
                             {% endif %}
                             <div class="card-body">
                         <h5>{{ x.title }}</h5>
-                {% endfor %}
                 </div></a>
             </div>
+                {% endfor %}
+            </div>
         </div>
-         <ul class="pagination pagination-sm">
-	  {% if page_obj.has_previous %}
-	  <li class="page-item"><a class="page-link" href="{% url 'genre-detail' genre %}?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
-		{% endif %}
-		<li class="page-item active" aria-current="page">
-		  <span class="page-link">{{ page_obj.number }}</span>
-		</li>
-	  {% if page_obj.has_next %}
-		<li class="page-item"><a class="page-link" href="{% url 'genre-detail' genre %}?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
-	  {% endif %}
-  </ul>
     </div>
-</div>
+
 
 
 
@@ -91,88 +47,5 @@ https://templatemo.com/tm-520-highway
         </div>
     </div>
 
+    {% endblock %}
 
-    <div class="pricing-tables">
-        <div class="container">
-            <div class="col-md-4 col-sm-6">
-                <div class="table-item">
-
-                    <div class="simple-btn">
-                        <a href="#">Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="table-item premium-item">
-
-                    <div class="simple-btn">
-                        <a href="#">Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="table-item">
-
-                    <div class="simple-btn">
-                        <a href="#">Details</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <footer>
-        <div class="container-fluid">
-            <div class="col-md-12">
-                <p>Copyright &copy; 2021 ScreenzZ
-
-    | Designed by Screenzz</p>
-            </div>
-        </div>
-    </footer>
-
-
-
-    <section class="overlay-menu">
-      <div class="container">
-        <div class="row">
-          <div class="main-menu">
-              <ul>
-                  <li>
-                      <a href="index.html">Home - Full-width</a>
-                  </li>
-                  <li>
-                      <a href="masonry.html">Home - Masonry</a>
-                  </li>
-                  <li>
-                      <a href="grid.html">Home - Small-width</a>
-                  </li>
-                  <li>
-                      <a href="about.html">About Us</a>
-                  </li>
-                  <li>
-                      <a href="blog.html">Blog Entries</a>
-                  </li>
-                  <li>
-                      <a href="single-post.html">Single Post</a>
-                  </li>
-              </ul>
-              <p>We create awesome templates for you</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-
-
-    <script src="{% static 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js' %}"></script>
-    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
-
-    <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
-
-    <script src="{% static 'js/plugins.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
-
-</body>
-</html>
