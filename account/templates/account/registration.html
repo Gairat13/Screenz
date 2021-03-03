@@ -1,10 +1,15 @@
 {% extends 'auth_base.html' %}
 {% block title %}Sign in{% endblock title%}
 {% block body %}
+<div class="container">
     <form method="post">
         {% csrf_token %}
         <div class="form__container">
           <div class="fieldset">
+              <div class="field">
+                <label class="form-label">{{ form.image.label_tag }}</label>
+                <input class="input" name="image" type="file" placeholder="Your email" required>
+            </div>
             <div class="field">
                 <label class="form-label">{{ form.email.label_tag }}</label>
                 <input class="input" name="email" type="email" placeholder="Your email" required>
@@ -28,6 +33,7 @@
             <button class="btn btn-primary" type="submit">Registration</button>
         </div>
       </form>
+</div>
 
 {% endblock %}
 

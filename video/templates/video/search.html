@@ -1,0 +1,18 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+{% block body %}
+<h3>Найдено {{ len }} совпадений</h3>
+<br>
+    <div class="posts">
+        {% for movie in movies %}
+        <article>
+            <img src="{{ movie.image.url }}" style="width:200px; height:200px;" alt="" />
+            <h3>{{ movie.title }}</h3>
+            <p>{{ recipe.description|truncatewords:20 }}</p>
+            <ul class="actions">
+                <li><a href="{% url 'movie-detail' movie.id %}" class="button">watch</a></li>
+            </ul>
+        </article>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,6 +1,9 @@
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
+from django.views.generic import ListView, CreateView, DeleteView, UpdateView
 from django.views.generic.base import View
+
 
 from .forms import CreateMovieForm, ReviewForm, GenreForm
 from .models import *
@@ -11,22 +14,30 @@ class GenreListView(ListView):
     template_name = 'video/index.html'
     context_object_name = 'genres'
 
+    def get_template_names(self):
+        template_name = super().get_template_names()
+        search = self.request.GET.get('q', None)
+        if search:
+            template_name = 'video/search.html'
+        return template_name
 
-class GenreDetailView(DetailView):
-    model = Genre
-    template_name = 'video/genre-details.html'
-    context_object_name = 'genre'
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.slug = kwargs.get('slug', None)
-        return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
-        genre = self.get_object()
-        context['movies'] = Movie.objects.filter(genre__in=[genre])
+        search = self.request.GET.get('q', None)
+        if search:
+            context['movies'] = Movie.objects.filter(Q(title__icontains=search) | Q(description__icontains=search))
+            context['len'] = len(context['movies'])
         return context
+
+
+def GenreDetailView(request, *args, **kwargs):
+    genre = kwargs.get('slug', None)
+    movies = Movie.objects.filter(genre=genre)
+    paginator = Paginator(movies, 1)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'video/genre-details.html', locals())
 
 
 class CreateReviewView(CreateView):
@@ -51,15 +62,25 @@ class MovieDetailView(View):
         comments.reverse()
         if len(comments) > 20:
             comments = comments[:20]
-        return render(request, 'video/movie-detail.html', {'form': form, 'movie': movie, 'comments': comments})
+        return render(request, 'video/movie-detail.html', locals())
 
     def post(self, request, *args, **kwargs):
         user = request.user
         if not user.is_authenticated:
             return redirect(reverse_lazy('login'))
         form = ReviewForm(request.POST)
-        form.save()
+        if form.is_valid():
+            form.save()
         return redirect(reverse_lazy('movie-detail', kwargs={'pk': kwargs.get('pk', None)}))
+
+
+def add_favorite(request, *args, **kwargs):
+    movie = kwargs.get('pk', None)
+    user = request.user.id
+    if movie.favorites.exists(user_id=user):
+        movie.favorites.remove(user_id=user)
+    movie.favorites.add(user_id=user)
+    return redirect(reverse_lazy('movie-detail', kwargs={'pk': kwargs.get('pk', None)}))
 
 
 class DeleteMovieView(DeleteView):
@@ -75,12 +96,12 @@ class DeleteMovieView(DeleteView):
         return super().get(request, *args, **kwargs)
 
 
+
 class CreateMovieView(CreateView):
     model = Movie
     form_class = CreateMovieForm
     template_name = 'video/create-movie.html'
     success_url = reverse_lazy('index')
-
 
     def get(self, request, *args, **kwargs):
         self.object = None
@@ -94,9 +115,6 @@ class EditMovieView(UpdateView):
     model = Movie
     form_class = CreateMovieForm
     template_name = 'video/create-movie.html'
-
-
-
 
 
 

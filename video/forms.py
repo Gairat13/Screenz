@@ -19,3 +19,6 @@ class CreateMovieForm(forms.ModelForm):
         model = Movie
         fields = '__all__'
 
+
+
+

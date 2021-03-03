@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% if user.image %}
+    <img src="{{ user.image.url }}">
+    {% endif %}
+    <h5>First name: {{user.first_name}}</h5>
+    <h5>Last name: {{user.last_name}}</h5>
+    <h5>Email: {{user.email}}</h5>
+    <h5>Created: {{user.created}}</h5>
+    {% for x in favorites %}
+    {{ x.movie }}
+    {% endfor %}
+</body>
+</html>
