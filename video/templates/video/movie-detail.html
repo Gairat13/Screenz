@@ -2,16 +2,10 @@
 {% load static %}
 <html>
     <head>
+
+        <title>Movie</title>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Highway Single Post</title>
-<!--
 
-Highway Template
-
-https://templatemo.com/tm-520-highway
-
--->
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
@@ -27,7 +21,7 @@ https://templatemo.com/tm-520-highway
         <link href="https://fonts.googleapis.com/css?family=Kanit:100,200,300,400,500,600,700,800,900" rel="stylesheet">
 
         <script src="{% static 'js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' %}"></script>
-    </head>
+</head>
 
 <body>
 
@@ -55,9 +49,12 @@ https://templatemo.com/tm-520-highway
                     </div>
                     <div style="margin-left: 10%; margin-top: 5%;">
                         <h5>Title:  {{ movie.title }}</h5>
+                        <br>
                         <h5>Storyline:  {{ movie.description }}</h5>
+                        <br>
                         <h5>tagline:  {{ movie.tagline }}</h5>
-                        <h5>Genre:  {{ movie.genre }}</h5>
+                        <br>
+                        <h5>Genre:  {{ genre.title }}</h5>
                         <h5>Country:  {{ movie.gross_in_the_world }}</h5>
                         <h5>Date of premier:  {{ movie.world_premiere }}</h5>
                         <h5>Budget:  {{ movie.budget }}</h5>
@@ -72,17 +69,23 @@ https://templatemo.com/tm-520-highway
                             <div class="single-blog-post">
                                 <div style="margin-top: 5%;">
                                     {% if request.user.is_superuser or request.user.is_staff %}
-                                      <a href="{% url 'edit-movie' movie.id %}"><button style="margin-left: 8%"; type="button" class="btn btn-dark">Update</button></a>
-
-                                      <a href="{% url 'delete-movie' movie.id %}"><button style="margin-left: 5%"; type="button" class="btn btn-secondary">Delete</button></a>
+                                    <div class="w3-bar">
+                                      <a href="{% url 'edit-movie' movie.id %}"><button class="btn btn-success pull-center">Update</button></a>
+                                        <a href="{% url 'delete-movie' movie.id %}"><button class="btn btn-success pull-center">Delete</button></a>
+                                    </div>
                                     {% endif %}
+                                    {% if request.user.is_authenticated %}
+                                    <a href="{% url 'favorite' movie.id %}"><button class="btn btn-success pull-center">Favorite</button></a>
+                                    {% endif %}
+                                    </div>
                                         <video class="detail-page-video"  controls>
                                         <source src="{{ movie.video.url }}"  type='video/webm; codecs="vp8, vorbis"'>
                                         </video>
-                                </div>
                                 <div class="text-content">
                                      <h5>Title:  {{ movie.title }}</h5>
                                      <h5>Storyline:  {{ movie.description }}</h5>
+
+
 
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -97,7 +100,7 @@ https://templatemo.com/tm-520-highway
           <div class="col-md-6" style="display: flex;">
             <label class="form-label"></label>
             <input name="text" type="text" class="form-control" >
-              <button class="btn btn-dark" type="submit" style="margin-left: 5%;">comment</button>
+              <button class="btn btn-success" type="submit" style="margin-left: 5%;">comment</button>
           </div>
           </div>
           </div>
@@ -105,7 +108,8 @@ https://templatemo.com/tm-520-highway
 
         <div>
             {% for comment in comments %}
-            <h5>{{ comment }} </h5>
+            <h5>{{ comment.user }}: {{ comment.text }}</h5>
+            <h5>{{ comment.created }} </h5>
             {% endfor %}
         </div>
                                 </div>
@@ -114,8 +118,8 @@ https://templatemo.com/tm-520-highway
                     </div>
                 </div>
             </div>
-
-
+        </div>
+    </div>
     <footer>
         <div class="container-fluid">
             <div class="col-md-12">
@@ -131,22 +135,14 @@ https://templatemo.com/tm-520-highway
         <div class="row">
           <div class="main-menu">
               <div class="container">
-                <div>
-                    {% if user.is_authenticated %}
-                        {{ user.email }} <a href="{% url 'logout' %}"><button type="button" class="btn btn-dark">Exit</button></a>
-                    {% else %}
-                    <a href="{% url 'login' %}"><button type="button" class="btn btn-dark">log in</button></a> or
-                    <a href="{% url 'registration' %}"><button type="button" class="btn btn-dark"> Sign up</button></a>
-                    {% endif %}
-                </div>
-            {% block body %}{% endblock body %}
-                  <br>
-                </div>
-               <div class="search-box">
-                <input type="text" class="search-txt" placeholder="Search...">
-                <a href="#" class="search-btn"></a>
-                </div>
               <ul>
+                  <li>
+                      <section id="search" class="alt">
+                          <form method="get" action="{% url 'index' %}">
+                            <input type="text" name="q" id="query" placeholder="Search...">
+                          </form>
+                      </section>
+                  </li>
                   <li>
                       <a href="{% url 'index' %}">Home</a>
                   </li>
@@ -164,9 +160,71 @@ https://templatemo.com/tm-520-highway
                   </li>
               </ul>
           </div>
+            <div>
+                 {% if user.is_authenticated %}
+                   {{ user.email }} <a href="{% url 'logout' %}"><button type="button" class="btn btn-dark">Exit</button></a>
+                 {% else %}
+                 <a href="{% url 'login' %}"><button type="button" class="btn btn-dark">log in</button></a> or
+                 <a href="{% url 'registration' %}"><button type="button" class="btn btn-dark"> Sign up</button></a>
+                 {% endif %}
+            </div>
+          </div>
         </div>
       </div>
     </section>
+   <div class="popup-icon">
+      <button id="modBtn" class="modal-btn"><img src="{% static 'img/s.png' %}" alt=""></button>
+    </div>
+
+<!-- Modal -->
+    <div id="modal" class="modal">
+      <!-- Modal Content -->
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h3 class="header-title">Your<em>Profile</em></h3>
+          <div class="close-btn"><img src="{% static 'img/close_contact.png' %}" alt=""></div>
+        </div>
+        <!-- Modal Body -->
+        <div class="modal-body">
+          <div class="col-md-6 col-md-offset-3">
+
+            <form id="contact" action="" method="post">
+                  {% if user.image %}
+            <img src="{{ user.image.url }}">
+              {% endif %}
+                <div class="row">
+                    <div class="col-md-12">
+                      <fieldset>
+                            <h5>First name: {{user.name}}</h5>
+                      </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                      <fieldset>
+                            <h5>Last name: {{user.last_name}}</h5>
+                      </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                      <fieldset>
+                             Email: {{user.email}}
+                      </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                      <fieldset>
+                            <h5>Created: {{user.created}}</h5>
+                      </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                            {% for x in user.movies.all %}
+                            <a href="{% url 'movie-detail' x.id %}"><img src="{{ x.image.url }}" width="180px" height="280px"></a>
+                            {% endfor %}
+                    </div>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

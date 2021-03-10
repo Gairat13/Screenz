@@ -1,12 +1,12 @@
 {% extends "includes/base.html" %}
 {% load static %}
+{% block title %}ScreenzZ{% endblock %}
 {% block content %}
    <div id="video-container">
         <div class="video-overlay"></div>
         <div class="video-content">
             <div class="inner" style="background-image: url({% static 'img/videoplay.mp4' %});">
-              <h1>Welcome to <em>ScreenzZ</em></h1>
-              <p>Your movie theater at home</p>
+                <h1>Welcome to ScreenzZ</h1>
             </div>
         </div>
         <video autoplay="" loop="" muted>
@@ -40,7 +40,7 @@
             </a>
             {% endfor %}
         </div>
-      {% endblock %}
 
+      {% endblock %}
 
 </div>

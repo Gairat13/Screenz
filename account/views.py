@@ -41,24 +41,23 @@ class SigninView(LoginView):
 
 class DetailUserView(DetailView):
     model = User
-    template_name = 'account/profile.html'
+    template_name = 'video/includes/base.html'
     context_object_name = 'user'
-
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         user = kwargs.get('pk', None)
+        # self.user2 = request.user
         if user != request.user.pk:
             raise Http404
-        self.pk = user
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['favorites'] = Movie.objects.filter(favorites=self.pk)
+        context['favorites'] = self.request.user.movies.all()
+        print(self.request.user)
         return context
-
 
 
 

@@ -57,3 +57,7 @@ class User(AbstractBaseUser):
             self.create_activation_code()
         self.activation_code = code
         self.save(update_fields=['activation_code'])
+
+
+    def __str__(self):
+        return self.email

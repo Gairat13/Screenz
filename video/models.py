@@ -15,16 +15,9 @@ CHOICES = (
 )
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.TextField()
-    slug = models.CharField(max_length=50,unique=True)
-
-    def __str__(self):
-        return self.name
-
 class Genre(models.Model):
     title = models.CharField(max_length=50, unique=True)
+    description = models.CharField(max_length=200, default="")
     slug = models.CharField(primary_key=True, max_length=50)
     image = models.ImageField(upload_to='genres', blank=True, null=True)
 
@@ -50,7 +43,7 @@ class Movie(models.Model):
     gross_in_usa = models.PositiveBigIntegerField(default=0, help_text="specify the amount in dollars")
     gross_in_the_world = models.PositiveBigIntegerField(default=0, help_text="specify the amount in dollars")
     country = models.CharField(max_length=100, default='USA')
-    favorites = models.ManyToManyField(User, related_name='movies')
+    favorites = models.ManyToManyField(User, related_name='movies', blank=True)
 
     def __str__(self):
         return self.title

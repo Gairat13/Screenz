@@ -11,5 +11,5 @@ urlpatterns = [
     path('delete-movie/<int:pk>/', views.DeleteMovieView.as_view(), name='delete-movie'),
     path('edit-movie/<int:pk>/', views.EditMovieView.as_view(), name='edit-movie'),
     path('edit-movie/<int:pk>/', views.EditMovieView.as_view(), name='edit-movie'),
-    path('movie/<str:slug>/', views.add_favorite, name='favorite'),
+    path('movie-favorite/<int:pk>/', views.add_favorite, name='favorite'),
 ]

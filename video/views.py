@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
+from django.test.testcases import to_list
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView
 from django.views.generic.base import View
 
@@ -24,6 +25,7 @@ class GenreListView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
         search = self.request.GET.get('q', None)
+        print(search)
         if search:
             context['movies'] = Movie.objects.filter(Q(title__icontains=search) | Q(description__icontains=search))
             context['len'] = len(context['movies'])
@@ -31,9 +33,10 @@ class GenreListView(ListView):
 
 
 def GenreDetailView(request, *args, **kwargs):
-    genre = kwargs.get('slug', None)
-    movies = Movie.objects.filter(genre=genre)
-    paginator = Paginator(movies, 1)
+    slug = kwargs.get('slug', None)
+    movies = Movie.objects.filter(genre=slug)
+    genre = Genre.objects.get(slug=slug)
+    paginator = Paginator(movies, 3)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -58,6 +61,7 @@ class MovieDetailView(View):
         form = ReviewForm
         self.pk = kwargs.get('pk', None)
         movie = get_object_or_404(Movie, pk=self.pk)
+        genre = Genre.objects.filter(movie=movie).first
         comments = list(Review.objects.filter(movie_id=movie))
         comments.reverse()
         if len(comments) > 20:
@@ -74,13 +78,14 @@ class MovieDetailView(View):
         return redirect(reverse_lazy('movie-detail', kwargs={'pk': kwargs.get('pk', None)}))
 
 
-def add_favorite(request, *args, **kwargs):
-    movie = kwargs.get('pk', None)
-    user = request.user.id
-    if movie.favorites.exists(user_id=user):
-        movie.favorites.remove(user_id=user)
-    movie.favorites.add(user_id=user)
-    return redirect(reverse_lazy('movie-detail', kwargs={'pk': kwargs.get('pk', None)}))
+def add_favorite(request, pk):
+    if request.user.is_authenticated:
+        movie = get_object_or_404(Movie, pk=pk)
+        if movie.favorites.filter(pk=request.user).exists():
+            movie.favorites.remove(request.user)
+        movie.favorites.add(request.user)
+        return redirect(reverse_lazy('movie-detail', kwargs={'pk': pk}))
+    return redirect(reverse_lazy('login'))
 
 
 class DeleteMovieView(DeleteView):
@@ -94,7 +99,6 @@ class DeleteMovieView(DeleteView):
         if not user.is_superuser and not user.is_staff:
             return render(request, 'video/index.html')
         return super().get(request, *args, **kwargs)
-
 
 
 class CreateMovieView(CreateView):
